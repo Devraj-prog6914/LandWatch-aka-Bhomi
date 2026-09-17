@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: landwatch_backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=sqlite:///./landwatch.db
+      - SECRET_KEY=landwatch-ai-sih2026-super-secure-production-secret-key-99881122
+    volumes:
+      - ./data:/app/data
+      - ./backend/landwatch.db:/app/backend/landwatch.db
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: landwatch_frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
